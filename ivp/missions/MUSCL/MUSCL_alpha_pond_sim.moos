@@ -1,0 +1,277 @@
+//-------------------------------------------------
+// NAME: M. Benjamin, MIT CSAIL
+// FILE: alpha.moos
+//-------------------------------------------------
+
+ServerHost = localhost
+ServerPort = 9000
+Community  = muscl
+
+MOOSTimeWarp = 10
+
+//LAIR
+//LatOrigin  = 30.173253
+//LongOrigin = -85.753672 
+
+//bldg 581
+//LatOrigin  = 30.173803
+//LongOrigin = -85.751872
+
+//Test Pond
+LatOrigin  = 30.169950
+LongOrigin = -85.752356
+
+// MIT Sailing Pavilion (use this one)
+// LatOrigin  = 42.358456 
+// LongOrigin = -71.087589
+
+//------------------------------------------
+// Antler configuration  block
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 400
+
+  Run = uSimMarine	    	@ NewConsole = true
+  Run = pMarinePID      	@ NewConsole = true
+  Run = pHelmIvP        	@ NewConsole = true
+  Run = pMarineViewer	  	@ NewConsole = false
+  Run = pSearchGrid     	@ NewConsole = true //Do not run at same time as pDataGrid
+  //Run = pDataGrid     		@ NewConsole = true //Do not run at same time as pSearchGrid
+  Run = pNodeReporter	  	@ NewConsole = true
+  //Run = pLogger	  		@ NewConsole = true
+}
+
+//------------------------------------------
+// pLogger config block
+
+ProcessConfig = pLogger
+{
+  AppTick	= 10
+  CommsTick	= 10
+
+  File		= LOG
+  PATH		= ./
+  SyncLog 	= true @ 0.2
+  AsyncLog 	= true
+  FileTimeStamp = true
+
+  WildCardLogging = false
+  
+  Log     = NAV_X   @ 0
+  Log     = NAV_Y   @ 0
+  Log     = NAV_SPEED   @ 0
+  Log     = NAV_HEADING   @ 0
+  Log     = NAV_LAT   @ 0
+  Log     = NAV_LONG   @ 0
+  
+  Log     = DESIRED_SPEED   @ 0
+  Log     = DESIRED_HEADING   @ 0
+  
+  Log     = DEPLOY  @ 0
+  Log     = RETURN  @ 0
+  Log     = LOITER  @ 0
+  Log     = STATION_KEEP  @ 0
+  Log     = MOOS_MANUAL_OVERIDE  @ 0
+  
+  Log     = IVPHELM_ALLSTOP  @ 0
+  Log     = IVPHELM_STATE  @ 0
+  Log     = IVPHELM_SUMMARY  @ 0
+  
+  Log     = NODE_REPORT_LOCAL  @ 0
+  
+  Log     = VIEW_GRID  @ 10
+  
+}
+//--------------------------------------------------
+// pSearchGrid Configuration Block
+
+ProcessConfig = pSearchGrid
+{
+  AppTick       = 1
+  CommsTick     = 1
+
+  //grid_config = pts={-40,-40: 40,-40: 40,40: -40, 40}
+  grid_config = pts={-35,0:-22,28: 2,49:25,29: 38,0:26,-33: 0, -54:-24,-32}
+  grid_config = cell_size=3
+  grid_config = cell_vars=x:0:y:0:z:0
+  grid_config = cell_min=x:0
+  grid_config = cell_max=x:10
+}
+//--------------------------------------------------
+// pDataGrid Configuration Block
+
+ProcessConfig = pDataGrid
+{
+  AppTick       = 1
+  CommsTick     = 1
+
+  //grid_config = pts={-40,-40: 40,-40: 40,40: -40, 40}
+  grid_config = pts={-35,0:-22,28: 2,49:25,29: 38,0:26,-33: 0, -54:-24,-32}
+  grid_config = cell_size=3
+  grid_config = cell_vars=x:0:y:0:z:0
+  grid_config = cell_min=x:0
+  grid_config = cell_max=x:12
+  grid_config = cell_min=y:0
+  grid_config = cell_max=y:100
+}
+
+//------------------------------------------
+// uSimMarine config block
+
+ProcessConfig = uSimMarine
+{
+  AppTick  	= 4
+  CommsTick	= 4
+
+  start_x       = 0
+  start_y       = -20
+  start_heading = 180
+  start_speed   = 0
+  
+  drift_x       = 0
+
+  prefix        = NAV
+
+	//max_rudder_degs_per_sec = 12
+	
+  turn_loss     = .4
+  turn_rate     = 40
+  thrust_map    = 0:0, 20:1, 40:2, 60:3, 80:4, 100:5
+  thrust_reflect = true
+}
+ProcessConfig = pMarinePID
+{
+  AppTick    = 20
+  CommsTick  = 20
+
+  verbose       = true
+  depth_control = false
+
+  // SIM_INSTABILITY = 20
+
+  // Yaw PID controller
+  yaw_pid_kp		 = 1.2
+  yaw_pid_kd		 = 0.0
+  yaw_pid_ki		 = 0.3
+  yaw_pid_integral_limit = 0.07
+
+  // Speed PID controller
+  speed_pid_kp		 = 1.0
+  speed_pid_kd		 = 0.0
+  speed_pid_ki		 = 0.0
+  speed_pid_integral_limit = 0.07
+
+  //MAXIMUMS
+  maxrudder    = 100
+  maxthrust    = 100
+
+  // A non-zero SPEED_FACTOR overrides use of SPEED_PID
+  // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR
+  speed_factor = 20
+}
+//------------------------------------------
+// pHelmIvP config block
+
+ProcessConfig = pHelmIvP
+{
+  AppTick    = 4
+  CommsTick  = 4
+
+  bhv_dir_not_found_ok = true
+
+  behaviors  = MUSCL.bhv
+  domain     = course:0:359:360
+  domain     = speed:0:5:51
+}
+//------------------------------------------
+// pMarineViewer config block
+
+ProcessConfig = pMarineViewer
+{
+  AppTick    = 4
+  CommsTick  = 4
+
+  TIFF_FILE = /home/bayslt2user/Code/images/test_pond.tif
+  INFO_FILE  = /home/bayslt2user/Code/images/test_pond.info
+  
+  //TIFF_FILE = /home/bayslt2user/Code/images/581bldg.tif
+  //INFO_FILE  = /home/bayslt2user/Code/images/581bldg.info
+
+  set_pan_x            = -90
+  set_pan_y            = -280
+  zoom                 = 0.65
+  vehicle_shape_scale  = 1.5
+  hash_delta           = 50
+  hash_shade           = 0.4
+  hash_viewable        = true
+
+  trails_point_size   = 1
+
+  // Appcast configuration
+  appcast_height       = 75
+  appcast_width        = 30
+  appcast_viewable     = true
+  appcast_color_scheme = indigo
+  nodes_font_size      = medium
+  procs_font_size      = medium
+  appcast_font_size    = small
+  
+  //datum_viewable = true
+  //datum_size     = 18
+  //gui_size = small
+
+  //left_context[survey-point] = DEPLOY=true
+  //left_context[survey-point] = MOOS_MANUAL_OVERRIDE=false
+  //left_context[survey-point] = RETURN=false
+  left_context[survey-point] = RETURN=false
+  left_context[survey-point] = STATION_KEEP=false
+  left_context[survey-point] = LOITER = true
+  left_context[survey-point] = UP_LOITER = center_assign=$(XPOS),$(YPOS)
+  
+
+  right_context[return] = DEPLOY=true
+  right_context[return] = MOOS_MANUAL_OVERRIDE=false
+  right_context[return] = LOITER=false
+  right_context[return] = STATION_KEEP=false
+  right_context[return] = RETURN=false
+
+  scope  = MISSION
+  scope  = SURVEY_DIST_TO_NEXT
+  scope  = SURVEY_DIST_TO_PREV
+  scope  = RETURN
+  scope  = WPT_STAT
+  scope  = MVIEWER_LCLICK
+
+  button_one = DEPLOY # DEPLOY=true
+  button_one = MOOS_MANUAL_OVERRIDE=false # RETURN=false # LOITER=false # STATION_KEEP=false
+  button_two = RETURN # RETURN=true # STATION_KEEP=false
+  button_three = STOP # MUSCL_STOP=true # MOOS_MANUAL_OVERRIDE=true # DEPLOY=false # RETURN=false # LOITER=false # STATION_KEEP=false
+  button_four  = STATION-KEEP # STATION_KEEP=true
+
+  action  = MENU_KEY=deploy # DEPLOY = true # RETURN = false
+  action+ = MENU_KEY=deploy # MOOS_MANUAL_OVERRIDE=false
+  action  = RETURN=true
+  action  = UPDATES_RETURN=speed=1.4
+  
+  action  = WPT_UPDATE=speed=1.0
+  action  = WPT_UPDATE=speed=1.5
+  action  = WPT_UPDATE=speed=2.0
+  action  = WPT_UPDATE=speed=2.5
+  action  = WPT_UPDATE=speed=3.0
+  action  = WPT_UPDATE=speed=3.5
+  action  = WPT_UPDATE=speed=4.0
+  action  = WPT_UPDATE=speed=4.5
+  
+}
+
+//------------------------------------------
+// pNodeReporter config block
+
+ProcessConfig = pNodeReporter
+{
+  AppTick    = 2
+  CommsTick	 = 2
+
+  platform_type   = MUSCL
+  platform_length = 2
+}

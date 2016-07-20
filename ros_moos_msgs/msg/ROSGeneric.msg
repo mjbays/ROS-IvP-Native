@@ -1,0 +1,11 @@
+string m_sSrc
+string m_sSrcAux
+string m_sOriginatingCommunity
+string m_sKey
+char m_cMsgType
+float64 m_dfVal
+float64 m_dfVal2
+char m_cDataType
+float64 m_dfTime
+int32 m_nID
+string m_sVal

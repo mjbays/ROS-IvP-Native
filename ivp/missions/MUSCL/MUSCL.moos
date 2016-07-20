@@ -1,0 +1,38 @@
+//-------------------------------------------------
+// NAME: M. Benjamin, MIT CSAIL
+// FILE: alpha.moos
+//-------------------------------------------------
+
+ServerHost = localhost
+ServerPort = 9000
+Community  = alpha
+
+MOOSTimeWarp = 1
+
+// Forest Lake
+LatOrigin  = 30.173253
+LongOrigin = -85.753672 
+
+// MIT Sailing Pavilion (use this one)
+// LatOrigin  = 42.358456 
+// LongOrigin = -71.087589
+
+//------------------------------------------
+// Antler configuration  block
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 20
+
+  Run = pMUSCLDriver	    @ NewConsole = false
+}
+
+
+//------------------------------------------
+// uSimMarine config block
+
+ProcessConfig = pMUSCLDriver
+{
+  AppTick  	= 1
+  CommsTick	= 1
+
+} 

@@ -1,0 +1,64 @@
+#ignore svn and git repo files
+.svn/
+.git/
+#ignore compiled binary and build folders
+#bin/
+#build/
+
+
+#editor-modes/
+#include/
+#lib/
+
+#ignore filesystem files
+*.directory
+
+#ignore eclipse project files
+*.cproject
+*.project
+
+#ignore compiled object files and libraries
+#*.o
+#*.a
+#*.la
+#*.so
+
+#ignore log files
+#*.log
+#*.ico
+
+#ignore auto-generated CMakeFiles
+#CMakeFiles
+#CMakeCache.txt
+#Makefile
+
+#MOOS/proj-4.8.0/bin
+
+
+#MOOS_V10.0.3_May1215/proj-4.8.0/
+#MOOS_V10.0.3_May1215/
+#*.alog
+#*.blog
+#*.slog
+#*.xlog
+#*.ylog
+#*.tif
+#*.m
+#*.info
+#*.sty
+#*.tex
+#*.png
+#*.dox
+#*._moos
+#*.aof
+#*.rc
+#*.orig
+#*.def
+#*.help
+#*.icns
+#*._bhv
+#ivp/scripts/
+
+
+#*.gitignore
+
